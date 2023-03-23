@@ -45,7 +45,7 @@ def extract_features(rootpath, domain, problem, ft_file):
     os.system(command)
 
     timeHeuristic = time.time()
-    command = "ulimit -v 4194304;ulimit -t 100; "+  rootpath +"/search/downward --landmarks \"lm=lm_merged([lm_hm(m=1),lm_rhw(),lm_zg()])\" < " + startpath + "/output"
+    command = "ulimit -v 4194304;ulimit -t 100; "+  rootpath +"/search/downward-4 --landmarks \"lm=lm_merged([lm_hm(m=1),lm_rhw(),lm_zg()])\" < " + startpath + "/output"
     os.system(command)
     timeLandmark = time.time()
     ## print "Run command: " + str(command)            
