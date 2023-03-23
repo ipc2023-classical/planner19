@@ -72,7 +72,7 @@ def run_multi_plan_portfolio(configs, domain_file, problem_file, timeout, memory
         next_plan_prefix = f"tmp_plan_{get_random_string(PLAN_FILE_NAME_LENGTH)}"
         run_time = compute_run_time(timeout, configs, pos)
         if run_time <= 0:
-            return
+            continue
         exitcode = run_search(image, planner, domain_file, problem_file, next_plan_prefix, run_time, memory)
 
         yield (exitcode, next_plan_prefix)
@@ -82,7 +82,7 @@ def run_single_plan_portfolio(configs, domain_file, problem_file, plan_manager, 
     for pos, (relative_time, (image, planner)) in enumerate(configs):
         run_time = compute_run_time(timeout, configs, pos)
         if run_time <= 0:
-            return
+            continue
         exitcode = run_search(image, planner, domain_file, problem_file, plan_manager.get_plan_prefix(),
                               run_time, memory)
         yield exitcode
@@ -162,7 +162,19 @@ def run(portfolio, domain_file, problem_file, plan_manager, time, memory):
 
         existing_plan_files = [str(plan) for plan_prefix in planprefixes for plan in get_existing_plans(plan_prefix) ]
         print(f"Portfolio computed the following plans: {existing_plan_files}")
-        print(f"Moving the last found plan {existing_plan_files[-1]} to {plan_manager.get_plan_prefix()}")
-        shutil.move(existing_plan_files[-1], plan_manager.get_plan_prefix())
+        best_plan_file = existing_plan_files[-1]
+        best_cost = float('inf')
+        for plan_file in existing_plan_files:
+            for line in reversed(list(open(plan_file))):
+                line = line.lower()
+                if 'cost' in line:
+                    cost = int(line.split(' ')[3])
+                    if cost < best_cost:
+                        best_cost = cost
+                        best_plan_file = plan_file
+
+        print(f"Moving the best found plan {best_plan_file} to {plan_manager.get_plan_prefix()}")
+        shutil.move(best_plan_file, plan_manager.get_plan_prefix())
+
 
     return returncodes.generate_portfolio_exitcode(list(exitcodes))
