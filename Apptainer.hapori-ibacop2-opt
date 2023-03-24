@@ -37,7 +37,7 @@ From: ubuntu:22.04
 %labels
 Name        Hapori IBaCop2 Sat
 Description Sequential portfolio of optimal IPC planners computed on an instance-based fashion. A set of 3 planners are pre-selected based on PDDL task and heuristic features.
-Authors     Isabel Cenamor <icenamorg@gmail.com>, Tomas de la Rosa <tomdelarosa@gmail.com>, Fernando Fernandez-Rebollo <ffernand@inf.uc3m.es> ibas.ch>
+Authors     Isabel Cenamor <icenamorg@gmail.com>, Tomas de la Rosa <tomdelarosa@gmail.com>, Fernando Fernandez-Rebollo <ffernand@inf.uc3m.es>
 License     GPL 3
 Tracks      optimal
 SupportsDerivedPredicates                       yes
