@@ -169,19 +169,20 @@ def run(portfolio, domain_file, problem_file, plan_manager, time, memory):
 
         existing_plan_files = [str(plan) for plan_prefix in planprefixes for plan in get_existing_plans(plan_prefix) ]
         print(f"Portfolio computed the following plans: {existing_plan_files}")
-        best_plan_file = existing_plan_files[-1]
-        best_cost = float('inf')
-        for plan_file in existing_plan_files:
-            for line in reversed(list(open(plan_file))):
-                line = line.lower()
-                if 'cost' in line:
-                    cost = int(line.split(' ')[3])
-                    if cost < best_cost:
-                        best_cost = cost
-                        best_plan_file = plan_file
+        if existing_plan_files:
+            best_plan_file = ""
+            best_cost = float("inf")
+            for plan_file in existing_plan_files:
+                with open(plan_file) as f:
+                    for line in reversed(f.readlines()):
+                        if "; cost = " in line:
+                            cost = int(line.split(" ")[3])
+                            if cost < best_cost:
+                                best_cost = cost
+                                best_plan_file = plan_file
 
-        print(f"Moving the best found plan {best_plan_file} to {plan_manager.get_plan_prefix()}")
-        shutil.move(best_plan_file, plan_manager.get_plan_prefix())
+            print(f"Moving the best found plan {best_plan_file} to {plan_manager.get_plan_prefix()}")
+            shutil.move(best_plan_file, plan_manager.get_plan_prefix())
 
 
     return returncodes.generate_portfolio_exitcode(list(exitcodes))
